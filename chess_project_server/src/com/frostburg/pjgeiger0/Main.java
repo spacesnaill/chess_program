@@ -3,15 +3,27 @@ package com.frostburg.pjgeiger0;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Main {
 
+    volatile private  ArrayList<ClientHandler> clients = new ArrayList<>();
+    volatile private ArrayList<String> client_names = new ArrayList<>();
+
     public static void main(String[] args) throws IOException {
 	// write your code here
+        new Main().startTheServer();
+
+    }
+
+    public void startTheServer() throws IOException{
         ServerSocket server;
         int port_number = 4000;
 
         server = new ServerSocket(port_number);
+
         while(true){
             Socket client = null;
             try{
@@ -23,68 +35,127 @@ public class Main {
                 DataOutputStream output = new DataOutputStream(client.getOutputStream());
 
                 System.out.println("Assigning new thread to this client");
-
-                Thread t = new ClientHandler(client, input, output);
-
+                ClientHandler t = new ClientHandler(client, input, output);
                 t.start();
+                clients.add(t);
             }
             catch(Exception e){
                 client.close();
                 e.printStackTrace();
             }
         }
-
-    }
-}
-
-class ClientHandler extends Thread
-{
-    final DataInputStream input_stream;
-    final DataOutputStream output_stream;
-    final Socket client_socket;
-
-    public ClientHandler(Socket client, DataInputStream input, DataOutputStream output){
-        input_stream = input;
-        output_stream = output;
-        client_socket = client;
     }
 
-    @Override
-    public void run(){
-        String receiving;
-        String returning;
+    class MatchHandler extends Thread
+    {
+        private final ClientHandler player_one;
+        private final ClientHandler player_two;
+        private boolean turn = false; //false = white, 1 = black
+        private final boolean sides; //false = player one is white and player two is black, true = player one is black and player two is white
 
-        while(true){
+        public MatchHandler(ClientHandler sender, ClientHandler receiver){
+            Random coin_flip = new Random();
+            player_one = sender;
+            player_two = receiver;
+            if(coin_flip.nextInt(100) > 50){
+                sides = false; //player one is white, player two is black
+            }
+            else{
+                sides = true; //player one is white, player two is black
+            }
+        }
+
+        String[][] board = new String[][]{
+                {"A8","BR1"},{"B8","BK1"},{"C8","BB1"},{"D8","BKing"},{"E8","BQueen"},{"F8","BB2"},{"G8","BK2"},{"H8","BR2"},
+                {"A7","BP1"},{"B7","BP2"},{"C7","BP3"},{"D7","BP4"},{"E7","BP5"},{"F7","BP6"},{"G7","BP7"},{"H7","BP8"},
+                {"A6",".."},{"B6","__"},{"C6",".."},{"D6","__"},{"E6",".."},{"F6","__"},{"G6",".."},{"H6","__"},
+                {"A5","__"},{"B5",".."},{"C5","__"},{"D5",".."},{"E5","__"},{"F5",".."},{"G5","__"},{"H5",".."},
+                {"A4",".."},{"B4","__"},{"C4",".."},{"D4","__"},{"E4",".."},{"F4","__"},{"G4",".."},{"H4","__"},
+                {"A3","__"},{"B3",".."},{"C3","__"},{"D3",".."},{"E3","__"},{"F3",".."},{"G3","__"},{"H3",".."},
+                {"A2","WP1"},{"B2","WP2"},{"C2","WP3"},{"D2","WP4"},{"E2","WP5"},{"F2","WP6"},{"G2","WP7"},{"H2","WP8"},
+                {"A1","WR1"},{"B1","WK1"},{"C1","WB1"},{"D1","WKing"},{"E1","WQueen"},{"F1","WB2"},{"G1","WK2"},{"H1","WR2"},
+        };
+
+
+        @Override
+        public void run() {
+
+        }
+    }
+
+    //inner class
+    class ClientHandler extends Thread
+    {
+        private final DataInputStream input_stream;
+        private final DataOutputStream output_stream;
+        private final Socket client_socket;
+        private String user_name;
+        private boolean in_game = false; // am I in a game?
+        private boolean my_turn = false; // is it my turn to go?
+
+        public ClientHandler(Socket client, DataInputStream input, DataOutputStream output) throws IOException {
+            input_stream = input;
+            output_stream = output;
+            client_socket = client;
+        }
+
+        public String getUser_name(){
+            return user_name;
+        }
+
+        public void listUsers() throws IOException{
+            output_stream.writeUTF(client_names.toString());
+        }
+
+        public void setMy_turn(){
+            my_turn = true;
+        }
+
+        @Override
+        public void run(){
+            String receiving;
+            String returning;
             try {
-                output_stream.writeUTF("Pong");
-                receiving = input_stream.readUTF();
-
-                if(receiving.equals("Exit")){
-                    System.out.println("Closing connection with: " + client_socket);
-                    client_socket.close();
-                    System.out.println("Connection closed");
-                    break;
-                }
-                if(receiving.equals("Ping")){
-                    returning = "Pong";
-                    output_stream.writeUTF(returning);
-                    break;
-                }
+                output_stream.writeUTF("Enter a username: ");
+                user_name = input_stream.readUTF();
+                client_names.add(user_name);
             }
             catch(IOException e){
                 e.printStackTrace();
             }
-        }
+            while(true){
+                try {
+                    output_stream.writeUTF("Enter a command: ");
+                    receiving = input_stream.readUTF().toLowerCase();
+                    if(receiving.equals("exit")){
+                        System.out.println("Closing connection with: " + client_socket);
+                        client_socket.close();
+                        System.out.println("Connection closed");
+                        break;
+                    }
+                    if(receiving.equals("names")){
+                        listUsers();
+                        continue;
+                    }
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                    break;
+                }
+            }
 
-        try{
-            input_stream.close();
-            output_stream.close();
-            client_socket.close();
-        }
-        catch (IOException e){
-            e.printStackTrace();
+            try{
+                input_stream.close();
+                output_stream.close();
+                client_socket.close();
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+
         }
 
     }
-
 }
+
+
