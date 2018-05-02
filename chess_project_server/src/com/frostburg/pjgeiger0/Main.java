@@ -5,12 +5,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Random;
 
 public class Main {
 
-    volatile private ArrayList<ClientHandler> clients = new ArrayList<>();
-    volatile private ArrayList<String> client_names = new ArrayList<>();
+    //volatile private ArrayList<ClientHandler> clients = new ArrayList<>();
+    //volatile private ArrayList<String> client_names = new ArrayList<>();
+
+    volatile private Hashtable<String, ClientHandler> clients= new Hashtable<>();
 
     public static void main(String[] args) throws IOException {
         // write your code here
@@ -37,7 +40,6 @@ public class Main {
                 System.out.println("Assigning new thread to this client");
                 ClientHandler t = new ClientHandler(client, input, output);
                 t.start();
-                clients.add(t);
             } catch (Exception e) {
                 client.close();
                 e.printStackTrace();
@@ -86,6 +88,12 @@ public class Main {
     }
 
     //inner class
+    //Here the ClientHandler thread allows for multiple clients to join the server at once
+    //Each client is given a ClientHandler thread
+    //The ClientHandler thread then has a ClientHandlerInput thread that will watch for input from the client
+    //Depending on the input the Client provides, the ClientHandlerInput thread may call a method from ClientHandler
+    //ClientHandler can worry about sending data to the Client, since that doesn't really block up the flow of data like
+    //listening for input does
     class ClientHandler extends Thread {
         private final DataInputStream input_stream;
         private final DataOutputStream output_stream;
@@ -133,7 +141,8 @@ public class Main {
             try {
                 output_stream.writeUTF("Enter a username: ");
                 user_name = input_stream.readUTF();
-                client_names.add(user_name);
+                clients.put(user_name, this);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
