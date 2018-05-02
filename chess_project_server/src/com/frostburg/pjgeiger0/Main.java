@@ -180,6 +180,31 @@ public class Main {
 
         }
 
+        class ClientHandlerInput extends Thread{
+            private final Socket socket;
+            private final DataInputStream input;
+
+            public ClientHandlerInput(Socket clientInput, DataInputStream clientInputStream){
+                socket = clientInput;
+                input = clientInputStream;
+            }
+
+            @Override
+            public void run(){
+                String receiving;
+                while(true){
+                    try{
+                        receiving = input.readUTF();
+                        System.out.println(receiving);
+                    }
+                    catch(IOException e){
+                        e.printStackTrace();
+                        break;
+                    }
+                }
+            }
+        }
+
     }
 }
 
