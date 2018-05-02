@@ -65,6 +65,7 @@ public class Main {
             }
         }
 
+        //might reverse this so the coordinates can be multiplied by each other to get the location in the array
         String[][] board = new String[][]{
                 {"A8","BR1"},{"B8","BK1"},{"C8","BB1"},{"D8","BKing"},{"E8","BQueen"},{"F8","BB2"},{"G8","BK2"},{"H8","BR2"},
                 {"A7","BP1"},{"B7","BP2"},{"C7","BP3"},{"D7","BP4"},{"E7","BP5"},{"F7","BP6"},{"G7","BP7"},{"H7","BP8"},
@@ -79,6 +80,10 @@ public class Main {
 
         @Override
         public void run() {
+
+        }
+
+        public void movePiece(String piece, String currentLocation, String destination){
 
         }
     }
@@ -107,6 +112,18 @@ public class Main {
             output_stream.writeUTF(client_names.toString());
         }
 
+        public void sendPing(String userName, String message) throws IOException{
+            for(ClientHandler var : clients){
+                if(var.getUser_name().equals(userName)){
+                    var.receivePing(message);
+                }
+            }
+        }
+
+        public void receivePing(String message) throws IOException{
+            output_stream.writeUTF(message);
+        }
+
         public void setMy_turn(){
             my_turn = true;
         }
@@ -115,6 +132,7 @@ public class Main {
         public void run(){
             String receiving;
             String returning;
+            //this is a sort of login, user provides a username and it's added to the list of users
             try {
                 output_stream.writeUTF("Enter a username: ");
                 user_name = input_stream.readUTF();
@@ -123,16 +141,22 @@ public class Main {
             catch(IOException e){
                 e.printStackTrace();
             }
+            //commands are picked up by this loop
             while(true){
                 try {
                     output_stream.writeUTF("Enter a command: ");
                     receiving = input_stream.readUTF().toLowerCase();
+                    //exit disconnects the client from the server
                     if(receiving.equals("exit")){
                         System.out.println("Closing connection with: " + client_socket);
                         client_socket.close();
                         System.out.println("Connection closed");
                         break;
                     }
+                    else if(receiving.split(" ")[0].equals("message")){
+                        sendPing(receiving.split(" ")[1], receiving.split(" ")[2]);
+                    }
+                    //typing in names provides a list of all the users connected to the server
                     if(receiving.equals("names")){
                         listUsers();
                         continue;
@@ -144,6 +168,7 @@ public class Main {
                 }
             }
 
+            //everything is closed if it was open
             try{
                 input_stream.close();
                 output_stream.close();

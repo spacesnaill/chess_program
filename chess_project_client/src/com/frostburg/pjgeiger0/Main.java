@@ -9,6 +9,11 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
+        new Main().startClient();
+
+    }
+
+    public void startClient(){
         int port_number = 4000;
         try{
             Scanner system_input = new Scanner(System.in);
@@ -16,11 +21,11 @@ public class Main {
             InetAddress ip = InetAddress.getByName("localhost");
 
             Socket client = new Socket(ip, port_number);
-            DataInputStream input = new DataInputStream(client.getInputStream());
             DataOutputStream output = new DataOutputStream(client.getOutputStream());
+            IncomingData input = new IncomingData(client);
+            input.start();
 
             while(true){
-                System.out.println(input.readUTF());
                 String sending = system_input.nextLine();
                 output.writeUTF(sending);
 
@@ -32,12 +37,35 @@ public class Main {
                 }
             }
             system_input.close();
-            input.close();
             output.close();
         }
         catch(IOException e){
             e.printStackTrace();
         }
+    }
 
+    class IncomingData extends Thread {
+        private final Socket clientSocket;
+        private final DataInputStream input;
+
+        public IncomingData(Socket client) throws IOException{
+            clientSocket = client;
+            input = new DataInputStream(clientSocket.getInputStream());
+        }
+
+        @Override
+        public void run(){
+            String receiving;
+            while (true) {
+                try{
+                    receiving = input.readUTF();
+                    System.out.println(receiving);
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                    break;
+                }
+            }
+        }
     }
 }
