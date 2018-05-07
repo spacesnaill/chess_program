@@ -17,11 +17,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Main_page {
 
@@ -39,6 +38,66 @@ public class Main_page {
         received = inFromServer.readLine();
         System.out.println("FROM SERVER: " + received);
         clientSocket.close();
+
+
+    }
+
+
+
+    public void startClient(){
+        int port_number = 4000;
+        try{
+            Scanner system_input = new Scanner(System.in);
+
+            InetAddress ip = InetAddress.getByName("localhost");
+
+            Socket client = new Socket(ip, port_number);
+            DataOutputStream output = new DataOutputStream(client.getOutputStream());
+            IncomingData input = new IncomingData(client);
+            input.start();
+
+            while(true){
+                String sending = system_input.nextLine();
+                output.writeUTF(sending);
+
+                if(sending.equals("Exit")){
+                    System.out.println("closing the connection: " + client);
+                    client.close();
+                    System.out.println("connection closed");
+                    break;
+                }
+            }
+            system_input.close();
+            output.close();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    class IncomingData extends Thread {
+        private final Socket clientSocket;
+        private final DataInputStream input;
+
+        public IncomingData(Socket client) throws IOException{
+            clientSocket = client;
+            input = new DataInputStream(clientSocket.getInputStream());
+        }
+
+        @Override
+        public void run(){
+            String receiving;
+            while (true) {
+                try{
+                    receiving = input.readUTF();
+                    System.out.println(receiving);
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                    break;
+                }
+            }
+        }
     }
 //    public static String SignIn(){
 //        //accept to who
@@ -67,7 +126,6 @@ public class Main_page {
 //    public static String move(){
 //        //on move
 //        //getMoveOutput().writeBytes("--move " + Main.getUserMakeAMove() + " " + type + " " + oldMousePressX + " " + oldMousePressY + "\n");
-//    }
 
 
 
@@ -103,71 +161,72 @@ public class Main_page {
 
 
 
-//    public void Sign_in(Stage primaryStage, Scene sceneGame) {
-//        connectToServer();                                                                          //connect to server
-//
-//        primaryStage.setTitle("Sign In");
-//        primaryStage.setMinHeight(600);
-//        primaryStage.setMinHeight(800);
-//
-//        Label label1 = new Label("Type your username below.");
-//        TextField textField = new TextField();
-//
-//        Button signInButton = new Button("Sign_in");
-//
-//        ListView<String> list = new ListView<String>();
-//        ObservableList<String> items =FXCollections.observableArrayList ( Client.getList());   //get list from server
-//        list.setItems(items);
-//
-//        Button updateList = new Button("Update");
-//        updateList.setDisable(true);
-//        updateList.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                Client.getList();
-//                                                                                                    //update list
-//            }
-//        });
-//
-//        Button yesButton = new Button("Yes");
-//        yesButton.setDisable(true);
-//        yesButton.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                Client.accept(textField.getText(),InetAddress.getLocalHost());                    //send info
-//                primaryStage.setScene(sceneGame);                                                       //get game
-//            }
-//        });
-//
-//
-//        Button noButton = new Button("No");
-//        noButton.setDisable(true);
-//        noButton.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                Client.reject();                                                                        //reject
-//                yesButton.setDisable(true);
-//                noButton.setDisable(true);
-//            }
-//        });
-//
-//        signInButton.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                Client.SignIn(textField.getText(),InetAddress.getLocalHost());                    //send info                                                      //send info
-//                updateList.setDisable(false);
-//                yesButton.setDisable(false);
-//                noButton.setDisable(false);
-//            }
-//        });
-//
-//        HBox layout = new HBox();
-//        layout.getChildren().addAll(label1, textField, signInButton, list, updateList, yesButton, noButton);
-//        layout.setSpacing(10);
-//
-//        Scene scene = new Scene(layout);
-//
-//    }
+
+    public void Sign_in(Stage primaryStage, Scene sceneGame) {
+        //connectToServer();                                                                          //connect to server
+
+        primaryStage.setTitle("Sign In");
+        primaryStage.setMinHeight(600);
+        primaryStage.setMinHeight(800);
+
+        Label label1 = new Label("Type your username below.");
+        TextField textField = new TextField();
+
+        Button signInButton = new Button("Sign_in");
+
+        ListView<String> list = new ListView<String>();
+        ObservableList<String> items =FXCollections.observableArrayList ( Client.getList());   //get list from server
+        list.setItems(items);
+
+        Button updateList = new Button("Update");
+        updateList.setDisable(true);
+        updateList.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Client.getList();
+                                                                                                    //update list
+            }
+        });
+
+        Button yesButton = new Button("Yes");
+        yesButton.setDisable(true);
+        yesButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Client.accept(textField.getText(),InetAddress.getLocalHost());                    //send info
+                primaryStage.setScene(sceneGame);                                                       //get game
+            }
+        });
+
+
+        Button noButton = new Button("No");
+        noButton.setDisable(true);
+        noButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Client.reject();                                                                        //reject
+                yesButton.setDisable(true);
+                noButton.setDisable(true);
+            }
+        });
+
+        signInButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Client.SignIn(textField.getText(),InetAddress.getLocalHost());                    //send info                                                      //send info
+                updateList.setDisable(false);
+                yesButton.setDisable(false);
+                noButton.setDisable(false);
+            }
+        });
+
+        HBox layout = new HBox();
+        layout.getChildren().addAll(label1, textField, signInButton, list, updateList, yesButton, noButton);
+        layout.setSpacing(10);
+
+        Scene scene = new Scene(layout);
+
+    }
 
 
 }
