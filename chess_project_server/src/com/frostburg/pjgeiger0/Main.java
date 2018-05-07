@@ -113,16 +113,13 @@ public class Main {
         }
 
         public void listUsers() throws IOException {
-            output_stream.writeUTF(client_names.toString());
+            for(String key : clients.keySet()){
+                output_stream.writeUTF(key);
+            }
         }
 
         public void sendPing(String userName, String message) throws IOException {
-            for (ClientHandler var : clients) {
-                if (var.getUser_name().equals(userName)) {
-                    var.receivePing(message);
-                    break;
-                }
-            }
+            clients.get(userName).receivePing(message);
         }
 
         public void receivePing(String message) throws IOException {
