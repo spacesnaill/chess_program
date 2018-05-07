@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -100,6 +101,7 @@ public class Main {
         private final Socket client_socket;
         private String user_name;
         private boolean in_game = false; // am I in a game?
+        private MatchHandler match;
         private boolean my_turn = false; // is it my turn to go?
 
         public ClientHandler(Socket client, DataInputStream input, DataOutputStream output) throws IOException {
@@ -112,18 +114,47 @@ public class Main {
             return user_name;
         }
 
+        public void createMatch(String oppenent) throws IOException{
+            try {
+                match = new MatchHandler(this, clients.get(oppenent));
+                
+            }
+            catch(NullPointerException e){
+                output_stream.writeUTF("No user by that name found.");
+            }
+        }
+
         public void listUsers() throws IOException {
             for(String key : clients.keySet()){
                 output_stream.writeUTF(key);
             }
         }
 
-        public void sendPing(String userName, String message) throws IOException {
-            clients.get(userName).receivePing(message);
+        public void sendPing(String userName, String[] messageArray) throws IOException {
+            String message = "";
+            for(String x : messageArray){
+                message = message + " " + x;
+            }
+            try {
+                clients.get(userName).messageToClient(message);
+            }
+            catch(NullPointerException e){
+                output_stream.writeUTF("Sorry, that user does not exist");
+            }
         }
 
-        public void receivePing(String message) throws IOException {
+        public void messageToClient(String message) throws IOException {
             output_stream.writeUTF(message);
+        }
+
+        //lists available commands
+        public void listCommands() throws IOException{
+            output_stream.writeUTF("Commands are: \n" +
+                    "--message [user] [text] \n" +
+                    "--join [user]\n" +
+                    "--leave\n" +
+                    "--move [piece name] [destination]\n" +
+                    "--leave");
         }
 
         public void setMy_turn() {
@@ -139,6 +170,7 @@ public class Main {
                 output_stream.writeUTF("Enter a username: ");
                 user_name = input_stream.readUTF();
                 clients.put(user_name, this);
+                listCommands();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -182,18 +214,35 @@ public class Main {
                 while(true){
                     try{
                         receiving = input.readUTF();
+                        String[] messageArray = receiving.split(" ");
                         System.out.println(receiving);
                         if(receiving.equals("exit")){
                             closeSocket();
                             break;
                         }
-                        else if(receiving.split(" ")[0].equals("message")){
-                            sendPing(receiving.split(" ")[1], receiving.split(" ")[2]);
+                        else if(messageArray[0].equals("--message")){
+                            //sends a message to another user
+                            sendPing(messageArray[1], Arrays.copyOfRange(messageArray, 2, messageArray.length));
                         }
-                        //typing in names provides a list of all the users connected to the server
-                        if(receiving.equals("names")){
+                        else if(messageArray[0].equals("--join")){
+                            if(in_game){
+                                messageToClient("Sorry, you're already in a game");
+                            }
+                            createMatch();
+                        }
+                        else if(messageArray[0].equals("--leave")){
+                            //leaves a game
+                        }
+                        else if(messageArray[0].equals("--move")){
+                            //moves a piece on the chess board
+                        }
+                        else if(receiving.equals("--list")){
+                            //lists the current usernames of the users connected to the server
                             listUsers();
                             continue;
+                        }
+                        else {
+                            listCommands();
                         }
 
                     }
