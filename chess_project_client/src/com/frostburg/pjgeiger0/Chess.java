@@ -1,6 +1,7 @@
 package com.frostburg.pjgeiger0;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -23,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
@@ -32,6 +34,7 @@ public class Chess extends Application {
     Scene sceneGame;
 
     public static boolean turn = true;                 //whos turn it is true =white
+    private volatile boolean side = true; //determines what the user can control: true is white, false is black
     public static int   movement = 0;
     public static final int TILE_SIZE = 100;
     public static final int WIDTH = 8;
@@ -41,6 +44,8 @@ public class Chess extends Application {
 
     private Group tileGroup = new Group();
     private Group pieceGroup = new Group();
+    private ObservableList<String> items;
+
 
 
     public static void main(String[] args) {
@@ -54,7 +59,6 @@ public class Chess extends Application {
         Client client = new Client(port, ip);
         client.start();
 
-
         sceneGame = new Scene(createContent());
 
 
@@ -66,7 +70,7 @@ public class Chess extends Application {
         TextField textField = new TextField();
         Button signInButton = new Button("Sign_in");
         ListView<String> list = new ListView<String>();
-        ObservableList<String> items = FXCollections.observableArrayList("1");
+        items = FXCollections.observableArrayList("1");
         list.setItems(items);
         Button yesButton = new Button("Yes");
         yesButton.setOnAction(e -> primaryStage.setScene(sceneGame));
@@ -74,8 +78,7 @@ public class Chess extends Application {
         noButton.setDisable(true);
         signInButton.setOnAction(e -> client.sendUserNameToServer(textField.getText()));
         Button refreshButton = new Button("Refresh");
-        refreshButton.setOnAction(e -> items.add());
-
+        refreshButton.setOnAction(e -> client.requestUserList());
         HBox layout = new HBox();
         layout.getChildren().addAll(label1, textField, signInButton, list, yesButton, noButton, refreshButton);
         layout.setSpacing(10);
@@ -91,7 +94,7 @@ public class Chess extends Application {
     class Client extends Thread{
         private Socket client;
         private DataOutputStream output;
-        private IncomingData input;
+        private IncomingData incoming;
 
         public Client(int port, InetAddress ip_address) throws IOException{
             client = new Socket(ip_address, port);
@@ -102,8 +105,8 @@ public class Chess extends Application {
         public void run(){
             try{
                 //Scanner system_input = new Scanner(System.in);
-                input = new IncomingData(client);
-                input.start();
+                incoming = new IncomingData(client);
+                incoming.start();
             }
             catch(IOException e){
                 e.printStackTrace();
@@ -120,27 +123,50 @@ public class Chess extends Application {
         }
 
         public void requestUserList(){
-            //output.writeUTF("--");
+            try {
+                output.writeUTF("--list");
+            }
+            catch(IOException e){
+                e.printStackTrace();
+                //return null;
+            }
         }
 
     }
 
     class IncomingData extends Thread {
         private final Socket clientSocket;
-        private final DataInputStream input;
+        private final DataInputStream incoming;
+        private String[] receiving;
 
         public IncomingData(Socket client) throws IOException{
             clientSocket = client;
-            input = new DataInputStream(clientSocket.getInputStream());
+            incoming = new DataInputStream(clientSocket.getInputStream());
         }
+
+
 
         @Override
         public void run(){
-            String receiving;
             while (true) {
                 try{
-                    receiving = input.readUTF();
-                    System.out.println(receiving);
+                    receiving = incoming.readUTF().split(" ");
+
+                    if(receiving[0].equals("users")){
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                items.remove(0, items.size());
+                                items.addAll(Arrays.copyOfRange(receiving,0, receiving.length));
+                            }
+                        });
+                    }
+                    else if(receiving[0].equals("move")){
+
+                    }
+                    else if(receiving[0].equals("invite")){
+
+                    }
                 }
                 catch(IOException e){
                     e.printStackTrace();
@@ -388,7 +414,7 @@ public class Chess extends Application {
             }
         }
         if (piece.getType()==PieceType.WHITE_KING){
-            if(turn==false){
+            if(turn==false || side == false){
                 return new MoveResult(MoveType.NONE);
             }
             if(((newY<=(int)(piece.getOldY())/100+1)&&(newY>=(int)(piece.getOldY())/100-1)) &&

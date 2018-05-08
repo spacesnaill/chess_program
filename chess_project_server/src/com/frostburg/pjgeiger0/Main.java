@@ -138,9 +138,11 @@ public class Main {
         }
 
         public void listUsers() throws IOException {
+            String data = "users ";
             for(String key : clients.keySet()){
-                output_stream.writeUTF(key);
+                data = data + key + " ";
             }
+            output_stream.writeUTF(data);
         }
 
         public void sendPing(String userName, String[] messageArray) throws IOException {
