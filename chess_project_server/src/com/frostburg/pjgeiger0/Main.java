@@ -130,6 +130,7 @@ public class Main {
 
         public void createMatch(String oppenent) throws IOException{
             try {
+
                 match = new MatchHandler(this, clients.get(oppenent));
                 in_game = true;
                 clients.get(oppenent).setMatch(match);
@@ -171,14 +172,14 @@ public class Main {
         }
 
         //lists available commands
-        public void listCommands() throws IOException{
-            output_stream.writeUTF("Commands are: \n" +
-                    "--message [user] [text] \n" +
-                    "--join [user]\n" +
-                    "--leave\n" +
-                    "--move [piece name] [destination]\n" +
-                    "--leave");
-        }
+//        public void listCommands() throws IOException{
+//            output_stream.writeUTF("Commands are: \n" +
+//                    "--message [user] [text] \n" +
+//                    "--join [user]\n" +
+//                    "--leave\n" +
+//                    "--move [piece name] [destination]\n" +
+//                    "--leave");
+//        }
 
         public void setMy_turn() {
             my_turn = true;
@@ -195,7 +196,7 @@ public class Main {
                 }
                 user_name = input_stream.readUTF();
                 clients.put(user_name, this);
-                listCommands();
+                //listCommands();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -254,8 +255,15 @@ public class Main {
                                 messageToClient("Sorry, you're already in a game");
                             }
                             else {
-                                createMatch(messageArray[1]);
+                                //tell the other client that there is an invite and who it is from
+                                clients.get(messageArray[1]).messageToClient("invite " + getUser_name());
                             }
+                        }
+                        else if(messageArray[0].equals("--yes")){
+                            //set up the game with the two clients
+                        }
+                        else if(messageArray[0].equals("--no")){
+                            //tell the inviter that the invitee does not want to play
                         }
                         else if(messageArray[0].equals("--leave")){
                             //leaves a game
@@ -269,12 +277,13 @@ public class Main {
                             continue;
                         }
                         else {
-                            listCommands();
+                            //listCommands();
                         }
 
                     }
                     catch(IOException e){
                         e.printStackTrace();
+                        clients.remove(getUser_name());
                         break;
                     }
                 }

@@ -49,6 +49,7 @@ public class Chess extends Application {
     private Group tileGroup = new Group();
     private Group pieceGroup = new Group();
     private ObservableList<String> items;
+    private Label invites;
 
 
 
@@ -71,6 +72,7 @@ public class Chess extends Application {
         primaryStage.setMinHeight(800);
 
         Label label1 = new Label("Type your username below.");
+        invites = new Label("");
         TextField textField = new TextField();
         Button signInButton = new Button("Sign_in");
         ListView<String> list = new ListView<String>();
@@ -100,11 +102,11 @@ public class Chess extends Application {
                 noButton.setDisable(false);
                 signInButton.setDisable(true);
                 sendInvite.setDisable(false);
-                client.requestUserList();
+                client.sendMessageToServer("--list");
             }
         }));
-
-        refreshButton.setOnAction(e -> client.requestUserList());
+        
+        refreshButton.setOnAction(e -> client.sendMessageToServer("--list"));
 
         //user clicks on a name in the list, and the selected user to send an invite to changes with it
         list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -114,8 +116,10 @@ public class Chess extends Application {
             }
         });
 
+        sendInvite.setOnAction(e -> client.sendMessageToServer("--join " + selectedUser));
+
         HBox layout = new HBox();
-        layout.getChildren().addAll(label1, textField, signInButton, list, yesButton, noButton, refreshButton, sendInvite);
+        layout.getChildren().addAll(label1, textField, signInButton, list, yesButton, noButton, refreshButton, sendInvite, invites);
         layout.setSpacing(10);
         Scene scene = new Scene(layout);
 
@@ -148,6 +152,9 @@ public class Chess extends Application {
             }
         }
 
+
+        //due to the way the server is set up, this method is needed to send a username since the server asks for a
+        //username first, then uses that username as a key in a hashtable
         public void sendUserNameToServer(String userName){
             try {
                 output.writeUTF(userName);
@@ -157,9 +164,10 @@ public class Chess extends Application {
             }
         }
 
-        public void requestUserList(){
+        //send a message to the server
+        public void sendMessageToServer(String message){
             try {
-                output.writeUTF("--list");
+                output.writeUTF(message);
             }
             catch(IOException e){
                 e.printStackTrace();
@@ -180,13 +188,14 @@ public class Chess extends Application {
         }
 
 
-
+        //server prefaces every message with what is in it, and from there we figure out what to do
         @Override
         public void run(){
             while (true) {
                 try{
-                    receiving = incoming.readUTF().split(" ");
+                    receiving = incoming.readUTF().split(" "); //turn the message into an array
 
+                    //check the first item in the message, as that says what's in it
                     if(receiving[0].equals("users")){
                         Platform.runLater(new Runnable() {
                             @Override
@@ -200,7 +209,12 @@ public class Chess extends Application {
 
                     }
                     else if(receiving[0].equals("invite")){
-
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                invites.setText("Invite from " + receiving[1]);
+                            }
+                        });
                     }
                     else if(receiving[0].equals("side")){
                         if(receiving[1].equals("black")){
