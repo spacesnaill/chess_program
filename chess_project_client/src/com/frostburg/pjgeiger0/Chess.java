@@ -105,7 +105,7 @@ public class Chess extends Application {
                 client.sendMessageToServer("--list");
             }
         }));
-        
+
         refreshButton.setOnAction(e -> client.sendMessageToServer("--list"));
 
         //user clicks on a name in the list, and the selected user to send an invite to changes with it
@@ -193,7 +193,8 @@ public class Chess extends Application {
         public void run(){
             while (true) {
                 try{
-                    receiving = incoming.readUTF().split(" "); //turn the message into an array
+                    String receivingText = incoming.readUTF();
+                    receiving = receivingText.split(" "); //turn the message into an array
 
                     //check the first item in the message, as that says what's in it
                     if(receiving[0].equals("users")){
@@ -223,6 +224,9 @@ public class Chess extends Application {
                         else{
                             side = true;
                         }
+                    }
+                    else if(receiving[0].equals("error")){
+                        System.out.println(receivingText);
                     }
                 }
                 catch(IOException e){

@@ -252,7 +252,10 @@ public class Main {
                         }
                         else if(messageArray[0].equals("--join")){
                             if(in_game){
-                                messageToClient("Sorry, you're already in a game");
+                                messageToClient("error Sorry, you're already in a game");
+                            }
+                            else if(messageArray[1].equals(getUser_name())){
+                                messageToClient("error You can't play against yourself");
                             }
                             else {
                                 //tell the other client that there is an invite and who it is from

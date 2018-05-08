@@ -27,17 +27,17 @@
       <file leaf-file-name="Chess.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/frostburg/pjgeiger0/Chess.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="107" column="8" lean-forward="false" selection-start-line="107" selection-start-column="8" selection-end-line="107" selection-end-column="8" />
+            <state relative-caret-position="143">
+              <caret line="195" column="62" lean-forward="false" selection-start-line="195" selection-start-column="62" selection-end-line="195" selection-end-column="62" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1669#1670#0" expanded="true" />
                 <element signature="e#1697#1698#0" expanded="true" />
                 <element signature="e#2345#2353#0" expanded="true" />
-                <element signature="e#7513#7514#0" expanded="true" />
-                <element signature="e#7623#7624#0" expanded="true" />
-                <element signature="e#12974#12975#0" expanded="true" />
-                <element signature="e#13037#13038#0" expanded="true" />
+                <element signature="e#7563#7564#0" expanded="true" />
+                <element signature="e#7673#7674#0" expanded="true" />
+                <element signature="e#13164#13165#0" expanded="true" />
+                <element signature="e#13227#13228#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -532,10 +532,10 @@
             <element signature="e#1669#1670#0" expanded="true" />
             <element signature="e#1697#1698#0" expanded="true" />
             <element signature="e#2345#2353#0" expanded="true" />
-            <element signature="e#7513#7514#0" expanded="true" />
-            <element signature="e#7623#7624#0" expanded="true" />
-            <element signature="e#12974#12975#0" expanded="true" />
-            <element signature="e#13037#13038#0" expanded="true" />
+            <element signature="e#7563#7564#0" expanded="true" />
+            <element signature="e#7673#7674#0" expanded="true" />
+            <element signature="e#13164#13165#0" expanded="true" />
+            <element signature="e#13227#13228#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -736,17 +736,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/frostburg/pjgeiger0/Chess.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="107" column="8" lean-forward="false" selection-start-line="107" selection-start-column="8" selection-end-line="107" selection-end-column="8" />
+        <state relative-caret-position="143">
+          <caret line="195" column="62" lean-forward="false" selection-start-line="195" selection-start-column="62" selection-end-line="195" selection-end-column="62" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1669#1670#0" expanded="true" />
             <element signature="e#1697#1698#0" expanded="true" />
             <element signature="e#2345#2353#0" expanded="true" />
-            <element signature="e#7513#7514#0" expanded="true" />
-            <element signature="e#7623#7624#0" expanded="true" />
-            <element signature="e#12974#12975#0" expanded="true" />
-            <element signature="e#13037#13038#0" expanded="true" />
+            <element signature="e#7563#7564#0" expanded="true" />
+            <element signature="e#7673#7674#0" expanded="true" />
+            <element signature="e#13164#13165#0" expanded="true" />
+            <element signature="e#13227#13228#0" expanded="true" />
           </folding>
         </state>
       </provider>
