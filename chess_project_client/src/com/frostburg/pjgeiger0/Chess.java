@@ -2,6 +2,8 @@ package com.frostburg.pjgeiger0;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -35,6 +37,8 @@ public class Chess extends Application {
 
     public static boolean turn = true;                 //whos turn it is true =white
     private volatile boolean side = true; //determines what the user can control: true is white, false is black
+    private volatile String selectedUser = "";
+
     public static int   movement = 0;
     public static final int TILE_SIZE = 100;
     public static final int WIDTH = 8;
@@ -101,7 +105,14 @@ public class Chess extends Application {
         }));
 
         refreshButton.setOnAction(e -> client.requestUserList());
-        
+
+        //user clicks on a name in the list, and the selected user to send an invite to changes with it
+        list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                selectedUser = newValue;
+            }
+        });
 
         HBox layout = new HBox();
         layout.getChildren().addAll(label1, textField, signInButton, list, yesButton, noButton, refreshButton, sendInvite);
