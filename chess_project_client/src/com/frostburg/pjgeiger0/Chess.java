@@ -53,6 +53,7 @@ public class Chess extends Application {
     private Button yesButton;
     private Button noButton;
     private Button sendInvite;
+    private Stage chessStage;
 
     public static void main(String[] args) {
         launch(args);
@@ -89,8 +90,16 @@ public class Chess extends Application {
         refreshButton.setDisable(true);
         sendInvite.setDisable(true);
 
-        //yes button starts the scene for now, but this will change later possibly
-        yesButton.setOnAction(e -> primaryStage.setScene(sceneGame));
+        chessStage = primaryStage;
+        //primaryStage.setScene(sceneGame)
+        //tell the server yes, I'm willing to play with the inviter
+        yesButton.setOnAction(e -> Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                client.sendMessageToServer("--yes " + invites.getText().split(" ")[2]);
+                primaryStage.setScene(sceneGame);
+            }
+        }));
 
         //no declines the invitation and allows the individual to send invites while locking down the yes and no buttons again
         noButton.setOnAction(e -> Platform.runLater(new Runnable() {
@@ -118,8 +127,6 @@ public class Chess extends Application {
                 client.sendMessageToServer("--list");
             }
         }));
-
-
 
         refreshButton.setOnAction(e -> client.sendMessageToServer("--list"));
 
@@ -259,6 +266,18 @@ public class Chess extends Application {
                             public void run() {
                                 invites.setText(receivingText);
                                 sendInvite.setDisable(false);
+                            }
+                        });
+                    }
+                    else if(receiving[0].equals("turn")){
+                        //it's your turn!
+                        turn = side;
+                    }
+                    else if(receiving[0].equals("start")){
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                chessStage.setScene(sceneGame);
                             }
                         });
                     }
