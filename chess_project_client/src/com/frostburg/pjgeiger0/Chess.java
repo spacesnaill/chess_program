@@ -167,6 +167,14 @@ public class Chess extends Application {
                     else if(receiving[0].equals("invite")){
 
                     }
+                    else if(receiving[0].equals("side")){
+                        if(receiving[1].equals("black")){
+                            side = false;
+                        }
+                        else{
+                            side = true;
+                        }
+                    }
                 }
                 catch(IOException e){
                     e.printStackTrace();
