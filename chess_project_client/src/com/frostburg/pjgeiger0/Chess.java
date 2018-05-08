@@ -126,6 +126,7 @@ public class Chess extends Application {
                 signInButton.setDisable(true);
                 sendInvite.setDisable(false);
                 client.sendMessageToServer("--list");
+                primaryStage.setTitle(textField.getText());
             }
         }));
 
@@ -155,7 +156,6 @@ public class Chess extends Application {
 
 
         StackPane layoutOther = new StackPane();
-        primaryStage.setTitle("Chess");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -420,7 +420,16 @@ public class Chess extends Application {
         return (int)(pixel + TILE_SIZE / 2) / TILE_SIZE;
     }
 
-
+    private MoveResult updateBoard(Piece piece, int newX, int newY) {
+        int x0 = toBoard(piece.getOldX());
+        int y0 = toBoard(piece.getOldY());
+        piece.move(newX, newY);
+        board[x0][y0].setPiece(null);
+        board[newX][newY].setPiece(piece);
+        turn=!turn;
+        Check_turn_Results();
+        piece.setMovement();
+    }
 
     private MoveResult tryMove(Piece piece, int newX, int newY) {
         if(newX==piece.getOldX()/100 && newY ==piece.getOldY()/100){             //if no move

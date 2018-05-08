@@ -27,17 +27,17 @@
       <file leaf-file-name="Chess.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/frostburg/pjgeiger0/Chess.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="409">
-              <caret line="410" column="57" lean-forward="false" selection-start-line="410" selection-start-column="57" selection-end-line="410" selection-end-column="57" />
+            <state relative-caret-position="324">
+              <caret line="431" column="5" lean-forward="false" selection-start-line="431" selection-start-column="5" selection-end-line="431" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1814#1815#0" expanded="true" />
                 <element signature="e#1842#1843#0" expanded="true" />
                 <element signature="e#2483#2491#0" expanded="true" />
-                <element signature="e#10510#10511#0" expanded="true" />
-                <element signature="e#10604#10605#0" expanded="true" />
-                <element signature="e#15768#15769#0" expanded="true" />
-                <element signature="e#15831#15832#0" expanded="true" />
+                <element signature="e#10530#10531#0" expanded="true" />
+                <element signature="e#10624#10625#0" expanded="true" />
+                <element signature="e#15788#15789#0" expanded="true" />
+                <element signature="e#15851#15852#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -104,6 +104,7 @@
       <find>turn==true</find>
       <find>turn==false</find>
       <find>MoveType.NORMAL</find>
+      <find>sign</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -533,10 +534,10 @@
             <element signature="e#1814#1815#0" expanded="true" />
             <element signature="e#1842#1843#0" expanded="true" />
             <element signature="e#2483#2491#0" expanded="true" />
-            <element signature="e#10510#10511#0" expanded="true" />
-            <element signature="e#10604#10605#0" expanded="true" />
-            <element signature="e#15768#15769#0" expanded="true" />
-            <element signature="e#15831#15832#0" expanded="true" />
+            <element signature="e#10530#10531#0" expanded="true" />
+            <element signature="e#10624#10625#0" expanded="true" />
+            <element signature="e#15788#15789#0" expanded="true" />
+            <element signature="e#15851#15852#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -737,17 +738,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/frostburg/pjgeiger0/Chess.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="410" column="57" lean-forward="false" selection-start-line="410" selection-start-column="57" selection-end-line="410" selection-end-column="57" />
+        <state relative-caret-position="324">
+          <caret line="431" column="5" lean-forward="false" selection-start-line="431" selection-start-column="5" selection-end-line="431" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1814#1815#0" expanded="true" />
             <element signature="e#1842#1843#0" expanded="true" />
             <element signature="e#2483#2491#0" expanded="true" />
-            <element signature="e#10510#10511#0" expanded="true" />
-            <element signature="e#10604#10605#0" expanded="true" />
-            <element signature="e#15768#15769#0" expanded="true" />
-            <element signature="e#15831#15832#0" expanded="true" />
+            <element signature="e#10530#10531#0" expanded="true" />
+            <element signature="e#10624#10625#0" expanded="true" />
+            <element signature="e#15788#15789#0" expanded="true" />
+            <element signature="e#15851#15852#0" expanded="true" />
           </folding>
         </state>
       </provider>
