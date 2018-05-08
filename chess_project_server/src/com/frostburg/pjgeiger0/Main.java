@@ -149,6 +149,7 @@ public class Main {
             for(String key : clients.keySet()){
                 data = data + key + " ";
             }
+            System.out.println(data);
             output_stream.writeUTF(data);
         }
 
@@ -189,7 +190,9 @@ public class Main {
             String returning;
             //this is a sort of login, user provides a username and it's added to the list of users
             try {
-                output_stream.writeUTF("Enter a username: ");
+                if(!(clients.isEmpty())){
+                    listUsers();
+                }
                 user_name = input_stream.readUTF();
                 clients.put(user_name, this);
                 listCommands();

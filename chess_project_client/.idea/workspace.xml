@@ -27,15 +27,15 @@
       <file leaf-file-name="Chess.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/frostburg/pjgeiger0/Chess.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="389">
-              <caret line="174" column="40" lean-forward="false" selection-start-line="174" selection-start-column="40" selection-end-line="174" selection-end-column="40" />
+            <state relative-caret-position="397">
+              <caret line="103" column="8" lean-forward="false" selection-start-line="103" selection-start-column="8" selection-end-line="103" selection-end-column="8" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1509#1510#0" expanded="true" />
                 <element signature="e#1537#1538#0" expanded="true" />
                 <element signature="e#2152#2160#0" expanded="true" />
-                <element signature="e#10604#10605#0" expanded="true" />
-                <element signature="e#10667#10668#0" expanded="true" />
+                <element signature="e#11504#11505#0" expanded="true" />
+                <element signature="e#11567#11568#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -530,8 +530,8 @@
             <element signature="e#1509#1510#0" expanded="true" />
             <element signature="e#1537#1538#0" expanded="true" />
             <element signature="e#2152#2160#0" expanded="true" />
-            <element signature="e#10604#10605#0" expanded="true" />
-            <element signature="e#10667#10668#0" expanded="true" />
+            <element signature="e#11504#11505#0" expanded="true" />
+            <element signature="e#11567#11568#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -732,15 +732,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/frostburg/pjgeiger0/Chess.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="174" column="40" lean-forward="false" selection-start-line="174" selection-start-column="40" selection-end-line="174" selection-end-column="40" />
+        <state relative-caret-position="397">
+          <caret line="103" column="8" lean-forward="false" selection-start-line="103" selection-start-column="8" selection-end-line="103" selection-end-column="8" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1509#1510#0" expanded="true" />
             <element signature="e#1537#1538#0" expanded="true" />
             <element signature="e#2152#2160#0" expanded="true" />
-            <element signature="e#10604#10605#0" expanded="true" />
-            <element signature="e#10667#10668#0" expanded="true" />
+            <element signature="e#11504#11505#0" expanded="true" />
+            <element signature="e#11567#11568#0" expanded="true" />
           </folding>
         </state>
       </provider>

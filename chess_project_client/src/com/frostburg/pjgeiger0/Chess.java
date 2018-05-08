@@ -73,14 +73,38 @@ public class Chess extends Application {
         items = FXCollections.observableArrayList("1");
         list.setItems(items);
         Button yesButton = new Button("Yes");
-        yesButton.setOnAction(e -> primaryStage.setScene(sceneGame));
         Button noButton = new Button("No");
-        noButton.setDisable(true);
-        signInButton.setOnAction(e -> client.sendUserNameToServer(textField.getText()));
         Button refreshButton = new Button("Refresh");
+        Button sendInvite = new Button("Invite");
+        //set the no button, yes button, and refresh to disabled until the user signs in
+        noButton.setDisable(true);
+        yesButton.setDisable(true);
+        refreshButton.setDisable(true);
+        sendInvite.setDisable(true);
+
+        //yes button starts the scene for now, but this will change later possibly
+        yesButton.setOnAction(e -> primaryStage.setScene(sceneGame));
+
+        //this will send the client's username to the server and then disable the button
+        //also enables the rest of the buttons
+        signInButton.setOnAction(e -> Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                client.sendUserNameToServer(textField.getText());
+                refreshButton.setDisable(false);
+                yesButton.setDisable(false);
+                noButton.setDisable(false);
+                signInButton.setDisable(true);
+                sendInvite.setDisable(false);
+                client.requestUserList();
+            }
+        }));
+
         refreshButton.setOnAction(e -> client.requestUserList());
+        
+
         HBox layout = new HBox();
-        layout.getChildren().addAll(label1, textField, signInButton, list, yesButton, noButton, refreshButton);
+        layout.getChildren().addAll(label1, textField, signInButton, list, yesButton, noButton, refreshButton, sendInvite);
         layout.setSpacing(10);
         Scene scene = new Scene(layout);
 
@@ -157,7 +181,7 @@ public class Chess extends Application {
                             @Override
                             public void run() {
                                 items.remove(0, items.size());
-                                items.addAll(Arrays.copyOfRange(receiving,0, receiving.length));
+                                items.addAll(Arrays.copyOfRange(receiving,1, receiving.length));
                             }
                         });
                     }
