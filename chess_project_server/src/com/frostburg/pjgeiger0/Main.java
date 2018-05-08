@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -65,7 +66,7 @@ public class Main {
         }
 
         //might reverse this so the coordinates can be multiplied by each other to get the location in the array
-        String[][] board = new String[][]{
+        private String[][] board = new String[][]{
                 {"A8", "BR1"}, {"B8", "BK1"}, {"C8", "BB1"}, {"D8", "BKing"}, {"E8", "BQueen"}, {"F8", "BB2"}, {"G8", "BK2"}, {"H8", "BR2"},
                 {"A7", "BP1"}, {"B7", "BP2"}, {"C7", "BP3"}, {"D7", "BP4"}, {"E7", "BP5"}, {"F7", "BP6"}, {"G7", "BP7"}, {"H7", "BP8"},
                 {"A6", ".."}, {"B6", "__"}, {"C6", ".."}, {"D6", "__"}, {"E6", ".."}, {"F6", "__"}, {"G6", ".."}, {"H6", "__"},
@@ -77,13 +78,20 @@ public class Main {
         };
 
 
+
         @Override
         public void run() {
 
         }
 
-        public void movePiece(String piece, String currentLocation, String destination) {
 
+        public void movePiece(ClientHandler player, String x) throws IOException {
+            if(player == player_one){
+                player_one.messageToClient("Piece moved");
+            }
+            else{
+                player_two.messageToClient("");
+            }
         }
     }
 
@@ -100,6 +108,7 @@ public class Main {
         private final Socket client_socket;
         private String user_name;
         private boolean in_game = false; // am I in a game?
+        private MatchHandler match;
         private boolean my_turn = false; // is it my turn to go?
 
         public ClientHandler(Socket client, DataInputStream input, DataOutputStream output) throws IOException {
@@ -112,18 +121,53 @@ public class Main {
             return user_name;
         }
 
+        public void createMatch(String oppenent) throws IOException{
+            try {
+                match = new MatchHandler(this, clients.get(oppenent));
+                in_game = true;
+                clients.get(oppenent).setMatch(match);
+                clients.get(oppenent).in_game = true;
+            }
+            catch(NullPointerException e){
+                output_stream.writeUTF("No user by that name found.");
+            }
+        }
+
+        public void setMatch(MatchHandler newMatch){
+            match = newMatch;
+        }
+
         public void listUsers() throws IOException {
             for(String key : clients.keySet()){
                 output_stream.writeUTF(key);
             }
         }
 
-        public void sendPing(String userName, String message) throws IOException {
-            clients.get(userName).receivePing(message);
+        public void sendPing(String userName, String[] messageArray) throws IOException {
+            String message = "";
+            for(String x : messageArray){
+                message = message + " " + x;
+            }
+            try {
+                clients.get(userName).messageToClient(message);
+            }
+            catch(NullPointerException e){
+                output_stream.writeUTF("Sorry, that user does not exist");
+            }
         }
 
-        public void receivePing(String message) throws IOException {
+        public void messageToClient(String message) throws IOException {
             output_stream.writeUTF(message);
+        }
+
+        //lists available commands
+        public void listCommands() throws IOException{
+            output_stream.writeUTF("Commands are: \n" +
+                    "--message [user] [text] \n" +
+                    "--join [user]\n" +
+                    "--leave\n" +
+                    "--move [piece name] [destination]\n" +
+                    "--leave");
         }
 
         public void setMy_turn() {
@@ -139,7 +183,7 @@ public class Main {
                 output_stream.writeUTF("Enter a username: ");
                 user_name = input_stream.readUTF();
                 clients.put(user_name, this);
-                System.out.println(user_name);
+                listCommands();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -183,18 +227,37 @@ public class Main {
                 while(true){
                     try{
                         receiving = input.readUTF();
+                        String[] messageArray = receiving.split(" ");
                         System.out.println(receiving);
                         if(receiving.equals("exit")){
                             closeSocket();
                             break;
                         }
-                        else if(receiving.split(" ")[0].equals("message")){
-                            sendPing(receiving.split(" ")[1], receiving.split(" ")[2]);
+                        else if(messageArray[0].equals("--message")){
+                            //sends a message to another user
+                            sendPing(messageArray[1], Arrays.copyOfRange(messageArray, 2, messageArray.length));
                         }
-                        //typing in names provides a list of all the users connected to the server
-                        if(receiving.equals("names")){
+                        else if(messageArray[0].equals("--join")){
+                            if(in_game){
+                                messageToClient("Sorry, you're already in a game");
+                            }
+                            else {
+                                createMatch(messageArray[1]);
+                            }
+                        }
+                        else if(messageArray[0].equals("--leave")){
+                            //leaves a game
+                        }
+                        else if(messageArray[0].equals("--move")){
+                            //moves a piece on the chess board
+                        }
+                        else if(receiving.equals("--list")){
+                            //lists the current usernames of the users connected to the server
                             listUsers();
                             continue;
+                        }
+                        else {
+                            listCommands();
                         }
 
                     }
