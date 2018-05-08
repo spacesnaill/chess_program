@@ -50,8 +50,9 @@ public class Chess extends Application {
     private Group pieceGroup = new Group();
     private ObservableList<String> items;
     private Label invites;
-
-
+    private Button yesButton;
+    private Button noButton;
+    private Button sendInvite;
 
     public static void main(String[] args) {
         launch(args);
@@ -78,10 +79,10 @@ public class Chess extends Application {
         ListView<String> list = new ListView<String>();
         items = FXCollections.observableArrayList("1");
         list.setItems(items);
-        Button yesButton = new Button("Yes");
-        Button noButton = new Button("No");
+        yesButton = new Button("Yes");
+        noButton = new Button("No");
         Button refreshButton = new Button("Refresh");
-        Button sendInvite = new Button("Invite");
+        sendInvite = new Button("Invite");
         //set the no button, yes button, and refresh to disabled until the user signs in
         noButton.setDisable(true);
         yesButton.setDisable(true);
@@ -91,6 +92,18 @@ public class Chess extends Application {
         //yes button starts the scene for now, but this will change later possibly
         yesButton.setOnAction(e -> primaryStage.setScene(sceneGame));
 
+        //no declines the invitation and allows the individual to send invites while locking down the yes and no buttons again
+        noButton.setOnAction(e -> Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                client.sendMessageToServer("--no " + invites.getText().split(" ")[2]);
+                invites.setText("Declined invitation from " + invites.getText().split(" ")[2]);
+                yesButton.setDisable(true);
+                sendInvite.setDisable(false);
+                noButton.setDisable(true);
+            }
+        }));
+
         //this will send the client's username to the server and then disable the button
         //also enables the rest of the buttons
         signInButton.setOnAction(e -> Platform.runLater(new Runnable() {
@@ -98,13 +111,15 @@ public class Chess extends Application {
             public void run() {
                 client.sendUserNameToServer(textField.getText());
                 refreshButton.setDisable(false);
-                yesButton.setDisable(false);
-                noButton.setDisable(false);
+                //yesButton.setDisable(false);
+                //noButton.setDisable(false);
                 signInButton.setDisable(true);
                 sendInvite.setDisable(false);
                 client.sendMessageToServer("--list");
             }
         }));
+
+
 
         refreshButton.setOnAction(e -> client.sendMessageToServer("--list"));
 
@@ -116,7 +131,14 @@ public class Chess extends Application {
             }
         });
 
-        sendInvite.setOnAction(e -> client.sendMessageToServer("--join " + selectedUser));
+        //sends a --join message to the user and also changes the label to "inviting x"
+        sendInvite.setOnAction(e -> Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                client.sendMessageToServer("--join " + selectedUser);
+                invites.setText("Inviting " + selectedUser);
+            }
+        }));
 
         HBox layout = new HBox();
         layout.getChildren().addAll(label1, textField, signInButton, list, yesButton, noButton, refreshButton, sendInvite, invites);
@@ -214,6 +236,9 @@ public class Chess extends Application {
                             @Override
                             public void run() {
                                 invites.setText("Invite from " + receiving[1]);
+                                yesButton.setDisable(false);
+                                noButton.setDisable(false);
+                                sendInvite.setDisable(true);
                             }
                         });
                     }
@@ -227,6 +252,15 @@ public class Chess extends Application {
                     }
                     else if(receiving[0].equals("error")){
                         System.out.println(receivingText);
+                    }
+                    else if(receiving[0].equals("Declined")){
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                invites.setText(receivingText);
+                                sendInvite.setDisable(false);
+                            }
+                        });
                     }
                 }
                 catch(IOException e){

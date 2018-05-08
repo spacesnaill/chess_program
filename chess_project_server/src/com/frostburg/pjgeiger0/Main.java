@@ -267,6 +267,7 @@ public class Main {
                         }
                         else if(messageArray[0].equals("--no")){
                             //tell the inviter that the invitee does not want to play
+                            clients.get(messageArray[1]).messageToClient("Declined by " + getUser_name());
                         }
                         else if(messageArray[0].equals("--leave")){
                             //leaves a game
