@@ -26,12 +26,13 @@ import java.awt.event.ActionEvent;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 
 public class Chess extends Application {
-
+    private ArrayList<Piece> pieceList;
     Scene scene;
     Scene sceneGame;
 
@@ -67,9 +68,9 @@ public class Chess extends Application {
         client = new Client(port, ip);
         client.start();
 
+        pieceList = new ArrayList<Piece>();
+
         sceneGame = new Scene(createContent());
-
-
         primaryStage.setTitle("Sign In");
         primaryStage.setMinHeight(600);
         primaryStage.setMinHeight(800);
@@ -281,6 +282,8 @@ public class Chess extends Application {
                             @Override
                             public void run() {
                                 chessStage.setScene(sceneGame);
+                                System.out.println(pieceList.size());
+                                updateBoard(pieceList.get(0), 2, 3);
                             }
                         });
                     }
@@ -357,10 +360,10 @@ public class Chess extends Application {
                 if (y == 6) {
                     piece = makePiece(PieceType.WHITE_PAWN, x, y, 0);
                 }
-
                 if (piece != null) {
                     tile.setPiece(piece);
                     pieceGroup.getChildren().add(piece);
+                    pieceList.add(piece);
                 }
             }
         }
@@ -397,6 +400,7 @@ public class Chess extends Application {
                     Check_turn_Results();
                     client.sendMessageToServer("--move");
                     piece.setMovement();
+                    System.out.println(piece.getType() + " moved to X:" + newX + " Y:" + newY);
                     break;
                 case KILL:
                     piece.move(newX, newY);
@@ -420,7 +424,7 @@ public class Chess extends Application {
         return (int)(pixel + TILE_SIZE / 2) / TILE_SIZE;
     }
 
-    private MoveResult updateBoard(Piece piece, int newX, int newY) {
+    private void updateBoard(Piece piece, int newX, int newY) {
         int x0 = toBoard(piece.getOldX());
         int y0 = toBoard(piece.getOldY());
         piece.move(newX, newY);
