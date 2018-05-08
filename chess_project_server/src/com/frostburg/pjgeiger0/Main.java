@@ -313,6 +313,7 @@ public class Main {
                         }
                         else if(messageArray[0].equals("--move")){
                             //moves a piece on the chess board
+                            match.nextTurn();
                         }
                         else if(receiving.equals("--list")){
                             //lists the current usernames of the users connected to the server

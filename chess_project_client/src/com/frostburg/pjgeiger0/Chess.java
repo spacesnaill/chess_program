@@ -54,6 +54,7 @@ public class Chess extends Application {
     private Button noButton;
     private Button sendInvite;
     private Stage chessStage;
+    private Client client;
 
     public static void main(String[] args) {
         launch(args);
@@ -63,7 +64,7 @@ public class Chess extends Application {
     public void start(Stage primaryStage) throws Exception {
         InetAddress ip = InetAddress.getByName("localhost");
         int port = 4000;
-        Client client = new Client(port, ip);
+        client = new Client(port, ip);
         client.start();
 
         sceneGame = new Scene(createContent());
@@ -252,9 +253,11 @@ public class Chess extends Application {
                     else if(receiving[0].equals("side")){
                         if(receiving[1].equals("black")){
                             side = false;
+                            System.out.println(side);
                         }
                         else{
                             side = true;
+                            System.out.println(side);
                         }
                     }
                     else if(receiving[0].equals("error")){
@@ -271,7 +274,7 @@ public class Chess extends Application {
                     }
                     else if(receiving[0].equals("turn")){
                         //it's your turn!
-                        turn = side;
+                        turn = !turn;
                     }
                     else if(receiving[0].equals("start")){
                         Platform.runLater(new Runnable() {
@@ -392,6 +395,7 @@ public class Chess extends Application {
                     board[newX][newY].setPiece(piece);
                     turn=!turn;
                     Check_turn_Results();
+                    client.sendMessageToServer("--move");
                     piece.setMovement();
                     break;
                 case KILL:
@@ -404,6 +408,7 @@ public class Chess extends Application {
                     pieceGroup.getChildren().remove(otherPiece);
                     turn=!turn;
                     Check_turn_Results();
+                    client.sendMessageToServer("--move");
                     piece.setMovement();
                     break;
             }
@@ -429,6 +434,7 @@ public class Chess extends Application {
                     ((newY==(int)(piece.getOldY())/100+2)&&piece.getMovement()==0)))
                     &&board[newX][newY].hasPiece()==false
                     &&checkPathBlockageStraight(piece, newX, newY)){
+
                 return new MoveResult(MoveType.NORMAL);
             }
 //            if(((newX==(int)(piece.getOldX())/100) && (newY==(int)(piece.getOldY())/100+2))
