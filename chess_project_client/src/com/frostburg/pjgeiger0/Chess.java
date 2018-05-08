@@ -238,7 +238,12 @@ public class Chess extends Application {
                         });
                     }
                     else if(receiving[0].equals("move")){
-
+                        System.out.println(receivingText);
+                        for(Piece e : pieceList){
+                            if(e.getType().toString().equals(receiving[1])){
+                                tryMove(e, receiving[2], receiving[3]);
+                            }
+                        }
                     }
                     else if(receiving[0].equals("invite")){
                         Platform.runLater(new Runnable() {
@@ -282,8 +287,6 @@ public class Chess extends Application {
                             @Override
                             public void run() {
                                 chessStage.setScene(sceneGame);
-                                System.out.println(pieceList.size());
-                                updateBoard(pieceList.get(0), 2, 3);
                             }
                         });
                     }
@@ -398,7 +401,7 @@ public class Chess extends Application {
                     board[newX][newY].setPiece(piece);
                     turn=!turn;
                     Check_turn_Results();
-                    client.sendMessageToServer("--move");
+                    client.sendMessageToServer("--move " + piece.getType() + " " + newX + " " + newY);
                     piece.setMovement();
                     System.out.println(piece.getType() + " moved to X:" + newX + " Y:" + newY);
                     break;
@@ -412,7 +415,7 @@ public class Chess extends Application {
                     pieceGroup.getChildren().remove(otherPiece);
                     turn=!turn;
                     Check_turn_Results();
-                    client.sendMessageToServer("--move");
+                    client.sendMessageToServer("--move " + piece.getType() + " " + newX + " " + newY);
                     piece.setMovement();
                     break;
             }

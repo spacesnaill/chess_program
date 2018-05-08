@@ -99,6 +99,17 @@ public class Main {
             return sides;
         }
 
+        //parameter is the player sending the message, it's a bit counterintuitive
+        public void sendToOtherPlayer(ClientHandler player, String message) throws IOException{
+            if(player == player_one){
+                player_two.messageToClient(message);
+            }
+            else{
+                player_one.messageToClient(message);
+            }
+        }
+
+        //this probably isnt even needed and is on the chopping block
         public void nextTurn() throws IOException{
             //if player one is white, and player two is black
             if(sides){
@@ -313,7 +324,20 @@ public class Main {
                         }
                         else if(messageArray[0].equals("--move")){
                             //moves a piece on the chess board
-                            match.nextTurn();
+                            if(getUser_name().equals(match.player_one.getUser_name())){
+                                //send to player two
+                                clients.get(match.player_two.user_name).messageToClient("move " +
+                                        messageArray[1] + " " +
+                                        messageArray[2] + " " +
+                                        messageArray[3]);
+                            }
+                            else{
+                                //send to player one
+                                clients.get(match.player_one.user_name).messageToClient("move " +
+                                        messageArray[1] + " " +
+                                        messageArray[2] + " " +
+                                        messageArray[3]);
+                            }
                         }
                         else if(receiving.equals("--list")){
                             //lists the current usernames of the users connected to the server
