@@ -139,6 +139,7 @@ public class Main {
                 output_stream.writeUTF("Enter a username: ");
                 user_name = input_stream.readUTF();
                 clients.put(user_name, this);
+                System.out.println(user_name);
 
             } catch (IOException e) {
                 e.printStackTrace();
