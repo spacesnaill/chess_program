@@ -308,7 +308,7 @@ public class Chess extends Application {
             return new MoveResult(MoveType.NONE);
         }
         if (piece.getType()==PieceType.RED_PAWN){
-            if(turn==true){
+            if(turn==true || side==true){
                 return new MoveResult(MoveType.NONE);
             }
             if(((newX==(int)(piece.getOldX())/100) && ((newY==(int)(piece.getOldY())/100+1)||
@@ -334,7 +334,7 @@ public class Chess extends Application {
             }
         }
         if (piece.getType()==PieceType.WHITE_PAWN ){
-            if(turn==false){
+            if(turn==false || side == false){
                 return new MoveResult(MoveType.NONE);
             }
             if(((newX==(int)(piece.getOldX())/100) && ((newY==(int)(piece.getOldY())/100-1)||
@@ -355,7 +355,7 @@ public class Chess extends Application {
             }
         }
         if (piece.getType()==PieceType.RED_ROOK_LIGHT || piece.getType()==PieceType.RED_ROOK_DARK) {
-            if(turn==true){
+            if(turn==true || side == true){
                 return new MoveResult(MoveType.NONE);
             }
             if ((((newX == (int) (piece.getOldX()) / 100 )) ||
@@ -374,7 +374,7 @@ public class Chess extends Application {
             }
         }
         if (piece.getType()==PieceType.WHITE_ROOK_LIGHT || piece.getType()==PieceType.WHITE_ROOK_DARK) {
-            if(turn==false){
+            if(turn==false || side==false){
                 return new MoveResult(MoveType.NONE);
             }
             if ((((newX == (int) (piece.getOldX()) / 100 )) ||
@@ -394,7 +394,7 @@ public class Chess extends Application {
         }
 
         if (piece.getType()==PieceType.RED_KING ){
-            if(turn==true){
+            if(turn==true || side==true){
                 return new MoveResult(MoveType.NONE);
             }
             if(((newY<=(int)(piece.getOldY())/100+1)&&(newY>=(int)(piece.getOldY())/100-1)) &&
@@ -434,7 +434,7 @@ public class Chess extends Application {
             }
         }
         if (piece.getType()==PieceType.RED_BISHOP_LIGHT||piece.getType()==PieceType.RED_BISHOP_DARK){
-            if(turn==true){
+            if(turn==true || side==true){
                 return new MoveResult(MoveType.NONE);
             }
             if ((Math.abs(newX-piece.getOldX()/100) - Math.abs(newY-piece.getOldY()/100)==0)
@@ -452,7 +452,7 @@ public class Chess extends Application {
         }
 
         if (piece.getType()==PieceType.WHITE_BISHOP_LIGHT||piece.getType()==PieceType.WHITE_BISHOP_DARK){
-            if(turn==false){
+            if(turn==false || side==false){
                 return new MoveResult(MoveType.NONE);
             }
             if ((Math.abs(newX-piece.getOldX()/100) - Math.abs(newY-piece.getOldY()/100)==0)
@@ -471,7 +471,7 @@ public class Chess extends Application {
 
 
         if (piece.getType()==PieceType.RED_QUEEN){
-            if(turn==true){
+            if(turn==true || side==true){
                 return new MoveResult(MoveType.NONE);
             }
             if (((Math.abs(newX-piece.getOldX()/100) - Math.abs(newY-piece.getOldY()/100)==0)||
@@ -495,7 +495,7 @@ public class Chess extends Application {
         }
 
         if (piece.getType()==PieceType.WHITE_QUEEN){
-            if(turn==false){
+            if(turn==false || side==false){
                 return new MoveResult(MoveType.NONE);
             }
             if (((Math.abs(newX-piece.getOldX()/100) - Math.abs(newY-piece.getOldY()/100)==0)||
@@ -519,13 +519,13 @@ public class Chess extends Application {
         }
 
         if (piece.getType()==PieceType.RED_KNIGHT) {
-            if(turn==true){
+            if(turn==true || side==true){
                 return new MoveResult(MoveType.NONE);
             }
             return getMoveResult_Knight(piece, newX, newY);
         }
         if (piece.getType()==PieceType.WHITE_KNIGHT) {
-            if(turn==false){
+            if(turn==false || side==false){
                 return new MoveResult(MoveType.NONE);
             }
             return getMoveResult_Knight(piece, newX, newY);

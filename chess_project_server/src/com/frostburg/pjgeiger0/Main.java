@@ -1,5 +1,7 @@
 package com.frostburg.pjgeiger0;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -54,28 +56,33 @@ public class Main {
         private boolean turn = false; //false = white, 1 = black
         private final boolean sides; //false = player one is white and player two is black, true = player one is black and player two is white
 
-        public MatchHandler(ClientHandler sender, ClientHandler receiver) {
-            Random coin_flip = new Random();
-            player_one = sender;
-            player_two = receiver;
-            if (coin_flip.nextInt(100) > 50) {
-                sides = false; //player one is white, player two is black
-            } else {
-                sides = true; //player one is white, player two is black
-            }
+        public MatchHandler(ClientHandler sender, ClientHandler receiver) throws IOException {
+                Random coin_flip = new Random();
+                player_one = sender;
+                player_two = receiver;
+
+                if (coin_flip.nextInt(100) > 50) {
+                    sides = false; //player one is white, player two is black
+                    player_one.messageToClient("side white");
+                    player_two.messageToClient("side black");
+                } else {
+                    sides = true; //player one is white, player two is black
+                    player_one.messageToClient("side black");
+                    player_two.messageToClient("side white");
+                }
         }
 
         //might reverse this so the coordinates can be multiplied by each other to get the location in the array
-        private String[][] board = new String[][]{
-                {"A8", "BR1"}, {"B8", "BK1"}, {"C8", "BB1"}, {"D8", "BKing"}, {"E8", "BQueen"}, {"F8", "BB2"}, {"G8", "BK2"}, {"H8", "BR2"},
-                {"A7", "BP1"}, {"B7", "BP2"}, {"C7", "BP3"}, {"D7", "BP4"}, {"E7", "BP5"}, {"F7", "BP6"}, {"G7", "BP7"}, {"H7", "BP8"},
-                {"A6", ".."}, {"B6", "__"}, {"C6", ".."}, {"D6", "__"}, {"E6", ".."}, {"F6", "__"}, {"G6", ".."}, {"H6", "__"},
-                {"A5", "__"}, {"B5", ".."}, {"C5", "__"}, {"D5", ".."}, {"E5", "__"}, {"F5", ".."}, {"G5", "__"}, {"H5", ".."},
-                {"A4", ".."}, {"B4", "__"}, {"C4", ".."}, {"D4", "__"}, {"E4", ".."}, {"F4", "__"}, {"G4", ".."}, {"H4", "__"},
-                {"A3", "__"}, {"B3", ".."}, {"C3", "__"}, {"D3", ".."}, {"E3", "__"}, {"F3", ".."}, {"G3", "__"}, {"H3", ".."},
-                {"A2", "WP1"}, {"B2", "WP2"}, {"C2", "WP3"}, {"D2", "WP4"}, {"E2", "WP5"}, {"F2", "WP6"}, {"G2", "WP7"}, {"H2", "WP8"},
-                {"A1", "WR1"}, {"B1", "WK1"}, {"C1", "WB1"}, {"D1", "WKing"}, {"E1", "WQueen"}, {"F1", "WB2"}, {"G1", "WK2"}, {"H1", "WR2"},
-        };
+//        private String[][] board = new String[][]{
+//                {"A8", "BR1"}, {"B8", "BK1"}, {"C8", "BB1"}, {"D8", "BKing"}, {"E8", "BQueen"}, {"F8", "BB2"}, {"G8", "BK2"}, {"H8", "BR2"},
+//                {"A7", "BP1"}, {"B7", "BP2"}, {"C7", "BP3"}, {"D7", "BP4"}, {"E7", "BP5"}, {"F7", "BP6"}, {"G7", "BP7"}, {"H7", "BP8"},
+//                {"A6", ".."}, {"B6", "__"}, {"C6", ".."}, {"D6", "__"}, {"E6", ".."}, {"F6", "__"}, {"G6", ".."}, {"H6", "__"},
+//                {"A5", "__"}, {"B5", ".."}, {"C5", "__"}, {"D5", ".."}, {"E5", "__"}, {"F5", ".."}, {"G5", "__"}, {"H5", ".."},
+//                {"A4", ".."}, {"B4", "__"}, {"C4", ".."}, {"D4", "__"}, {"E4", ".."}, {"F4", "__"}, {"G4", ".."}, {"H4", "__"},
+//                {"A3", "__"}, {"B3", ".."}, {"C3", "__"}, {"D3", ".."}, {"E3", "__"}, {"F3", ".."}, {"G3", "__"}, {"H3", ".."},
+//                {"A2", "WP1"}, {"B2", "WP2"}, {"C2", "WP3"}, {"D2", "WP4"}, {"E2", "WP5"}, {"F2", "WP6"}, {"G2", "WP7"}, {"H2", "WP8"},
+//                {"A1", "WR1"}, {"B1", "WK1"}, {"C1", "WB1"}, {"D1", "WKing"}, {"E1", "WQueen"}, {"F1", "WB2"}, {"G1", "WK2"}, {"H1", "WR2"},
+//        };
 
 
 
