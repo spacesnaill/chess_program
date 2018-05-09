@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-
+//TODO create a timer
 public class Chess extends Application {
     private volatile ArrayList<Piece> pieceList;
     Scene scene;
@@ -56,6 +56,7 @@ public class Chess extends Application {
     private Button sendInvite;
     private Stage chessStage;
     private Client client;
+    private Label timer = new Label("Hello World");
 
     public static void main(String[] args) {
         launch(args);
@@ -159,6 +160,9 @@ public class Chess extends Application {
         StackPane layoutOther = new StackPane();
         primaryStage.setScene(scene);
         primaryStage.show();
+        Stage secondStage = new Stage();
+        secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
+        secondStage.show();
     }
 
     class Client extends Thread{
@@ -431,6 +435,7 @@ public class Chess extends Application {
     private void updateBoard(Piece piece, int newX, int newY) {
         int x0 = toBoard(piece.getOldX());
         int y0 = toBoard(piece.getOldY());
+        //normal
         piece.move(newX, newY);
         board[x0][y0].setPiece(null);
         board[newX][newY].setPiece(piece);
