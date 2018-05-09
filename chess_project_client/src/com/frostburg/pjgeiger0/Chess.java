@@ -416,7 +416,7 @@ public class Chess extends Application {
                     pieceGroup.getChildren().remove(otherPiece);
                     turn=!turn;
                     Check_turn_Results();
-                    client.sendMessageToServer("--move " + piece.getType() + " " + newX + " " + newY + " " +  x + " " + y);
+                    client.sendMessageToServer("--move " + piece.getType() + " " + newX + " " + newY + " " +  x0 + " " + y0);
                     piece.setMovement();
                     break;
             }
