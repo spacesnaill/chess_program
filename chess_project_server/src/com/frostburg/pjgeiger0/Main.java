@@ -323,21 +323,21 @@ public class Main {
                             //leaves a game
                         }
                         else if(messageArray[0].equals("--move")){
-                            //moves a piece on the chess board
-                            if(getUser_name().equals(match.player_one.getUser_name())){
-                                //send to player two
-                                clients.get(match.player_two.user_name).messageToClient("move " +
-                                        messageArray[1] + " " +
-                                        messageArray[2] + " " +
-                                        messageArray[3]);
-                            }
-                            else{
-                                //send to player one
-                                clients.get(match.player_one.user_name).messageToClient("move " +
-                                        messageArray[1] + " " +
-                                        messageArray[2] + " " +
-                                        messageArray[3]);
-                            }
+//                            //moves a piece on the chess board
+//                            if(getUser_name().equals(match.player_one.getUser_name())){
+//                                //send to player two
+//                                clients.get(match.player_two.user_name).messageToClient("move " +
+//                                        messageArray[1] + " " +
+//                                        messageArray[2] + " " +
+//                                        messageArray[3]);
+//                            }
+//                            else{
+//                                //send to player one
+//                                clients.get(match.player_one.user_name).messageToClient("move " +
+//                                        messageArray[1] + " " +
+//                                        messageArray[2] + " " +
+//                                        messageArray[3]);
+//                            }
                         }
                         else if(receiving.equals("--list")){
                             //lists the current usernames of the users connected to the server

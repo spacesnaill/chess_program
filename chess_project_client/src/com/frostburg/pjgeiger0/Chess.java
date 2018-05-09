@@ -241,7 +241,7 @@ public class Chess extends Application {
                         System.out.println(receivingText);
                         for(Piece e : pieceList){
                             if(e.getType().toString().equals(receiving[1])){
-                                tryMove(e, receiving[2], receiving[3]);
+                                updateBoard(e, Integer.parseInt(receiving[2]), Integer.parseInt(receiving[3]));
                             }
                         }
                     }
