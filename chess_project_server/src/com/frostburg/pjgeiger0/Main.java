@@ -110,35 +110,35 @@ public class Main {
         }
 
         //this probably isnt even needed and is on the chopping block
-        public void nextTurn() throws IOException{
-            //if player one is white, and player two is black
-            if(sides){
-                //if it is currently white's turn, switch to black's turn
-                if(turn){
-                    player_two.messageToClient("turn");
-                    turn = !turn;
-                }
-                //if it is black's turn, switch to white
-                else{
-                    player_one.messageToClient("turn");
-                    turn = !turn;
-                }
-            }
-            //if player one is black and player two is white
-            else{
-                //if it is currently white's turn, switch to black's turn
-                if(turn){
-                    player_one.messageToClient("turn");
-                    turn = !turn;
-                }
-                //if it is black's turn, switch to white
-                else{
-                    player_two.messageToClient("turn");
-                    turn = !turn;
-                }
-            }
-
-        }
+//        public void nextTurn() throws IOException{
+//            //if player one is white, and player two is black
+//            if(sides){
+//                //if it is currently white's turn, switch to black's turn
+//                if(turn){
+//                    player_two.messageToClient("turn");
+//                    turn = !turn;
+//                }
+//                //if it is black's turn, switch to white
+//                else{
+//                    player_one.messageToClient("turn");
+//                    turn = !turn;
+//                }
+//            }
+//            //if player one is black and player two is white
+//            else{
+//                //if it is currently white's turn, switch to black's turn
+//                if(turn){
+//                    player_one.messageToClient("turn");
+//                    turn = !turn;
+//                }
+//                //if it is black's turn, switch to white
+//                else{
+//                    player_two.messageToClient("turn");
+//                    turn = !turn;
+//                }
+//            }
+//
+//        }
 
         public void movePiece(ClientHandler player, String x) throws IOException {
             if(player == player_one){
@@ -323,21 +323,25 @@ public class Main {
                             //leaves a game
                         }
                         else if(messageArray[0].equals("--move")){
-//                            //moves a piece on the chess board
-//                            if(getUser_name().equals(match.player_one.getUser_name())){
-//                                //send to player two
-//                                clients.get(match.player_two.user_name).messageToClient("move " +
-//                                        messageArray[1] + " " +
-//                                        messageArray[2] + " " +
-//                                        messageArray[3]);
-//                            }
-//                            else{
-//                                //send to player one
-//                                clients.get(match.player_one.user_name).messageToClient("move " +
-//                                        messageArray[1] + " " +
-//                                        messageArray[2] + " " +
-//                                        messageArray[3]);
-//                            }
+                            //moves a piece on the chess board
+                            if(getUser_name().equals(match.player_one.getUser_name())){
+                                //send to player two
+                                clients.get(match.player_two.user_name).messageToClient("move " +
+                                        messageArray[1] + " " +
+                                        messageArray[2] + " " +
+                                        messageArray[3] + " " +
+                                        messageArray[4] + " " +
+                                        messageArray[5]);
+                            }
+                            else{
+                                //send to player one
+                                clients.get(match.player_one.user_name).messageToClient("move " +
+                                        messageArray[1] + " " +
+                                        messageArray[2] + " " +
+                                        messageArray[3] + " " +
+                                        messageArray[4] + " " +
+                                        messageArray[5]);
+                            }
                         }
                         else if(receiving.equals("--list")){
                             //lists the current usernames of the users connected to the server

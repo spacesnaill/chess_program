@@ -240,7 +240,9 @@ public class Chess extends Application {
                     else if(receiving[0].equals("move")){
                         System.out.println(receivingText);
                         for(Piece e : pieceList){
-                            if(e.getType().toString().equals(receiving[1])){
+                            if(e.getType().toString().equals(receiving[1])
+                                    && e.getOldX()/TILE_SIZE == Integer.parseInt(receiving[4])
+                                    && e.getOldY()/TILE_SIZE == Integer.parseInt(receiving[5])){
                                 updateBoard(e, Integer.parseInt(receiving[2]), Integer.parseInt(receiving[3]));
                             }
                         }
@@ -401,9 +403,9 @@ public class Chess extends Application {
                     board[newX][newY].setPiece(piece);
                     turn=!turn;
                     Check_turn_Results();
-                    client.sendMessageToServer("--move " + piece.getType() + " " + newX + " " + newY);
+                    client.sendMessageToServer("--move " + piece.getType() + " " + newX + " " + newY + " " +  x + " " + y);
                     piece.setMovement();
-                    System.out.println(piece.getType() + " moved to X:" + newX + " Y:" + newY);
+                    System.out.println(piece.getType() + " moved to X:" + newX + " Y:" + newY + " OldX: " + x + " OldY: " + y);
                     break;
                 case KILL:
                     piece.move(newX, newY);

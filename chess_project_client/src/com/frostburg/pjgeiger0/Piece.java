@@ -17,6 +17,16 @@ public class Piece extends StackPane {
     private int movement;
     private int TILE_SIZE = Chess.TILE_SIZE;
 
+    private double currentX, currentY;
+
+    public double getCurrentX(){
+        return currentX;
+    }
+
+    public double getCurrentY(){
+        return currentY;
+    }
+
     public PieceType getType() {
         return type;
     }
