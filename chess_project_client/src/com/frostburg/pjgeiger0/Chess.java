@@ -32,7 +32,7 @@ import java.util.Scanner;
 
 
 public class Chess extends Application {
-    private ArrayList<Piece> pieceList;
+    private volatile ArrayList<Piece> pieceList;
     Scene scene;
     Scene sceneGame;
 
@@ -403,9 +403,9 @@ public class Chess extends Application {
                     board[newX][newY].setPiece(piece);
                     turn=!turn;
                     Check_turn_Results();
-                    client.sendMessageToServer("--move " + piece.getType() + " " + newX + " " + newY + " " +  x + " " + y);
+                    client.sendMessageToServer("--move " + piece.getType() + " " + newX + " " + newY + " " +  x0 + " " + y0);
                     piece.setMovement();
-                    System.out.println(piece.getType() + " moved to X:" + newX + " Y:" + newY + " OldX: " + x + " OldY: " + y);
+                    System.out.println(piece.getType() + " moved to X:" + newX + " Y:" + newY + " OldX: " + x0 + " OldY: " + y0);
                     break;
                 case KILL:
                     piece.move(newX, newY);
@@ -416,7 +416,7 @@ public class Chess extends Application {
                     pieceGroup.getChildren().remove(otherPiece);
                     turn=!turn;
                     Check_turn_Results();
-                    client.sendMessageToServer("--move " + piece.getType() + " " + newX + " " + newY);
+                    client.sendMessageToServer("--move " + piece.getType() + " " + newX + " " + newY + " " +  x + " " + y);
                     piece.setMovement();
                     break;
             }
