@@ -58,9 +58,9 @@ public class Chess extends Application {
     private Button sendInvite;
     private Stage chessStage;
     private Client client;
-    private Label whiteTimer = new Label("0");
-    private Label blackTimer = new Label("0");
-    private Label turnTracker = new Label("White");
+    private Label whiteTimer = new Label("");
+    private Label blackTimer = new Label("");
+    private Label turnTracker = new Label("Start a Match!");
     private volatile boolean gameStarted = false;
 
     public static void main(String[] args) {
@@ -172,6 +172,8 @@ public class Chess extends Application {
         Stage secondStage = new Stage();
         secondStage.setTitle("Timer");
         secondStage.setScene(new Scene(timerLayout));
+        secondStage.setWidth(200);
+        secondStage.setHeight(200);
         timerLayout.getChildren().addAll(whiteTimer, blackTimer, turnTracker);
         TimerThread chessTimer = new TimerThread();
         chessTimer.start();
@@ -197,7 +199,7 @@ public class Chess extends Application {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    turnTracker.setText("White");
+                                    turnTracker.setText("Current Turn: White");
                                     whiteTimer.setText(Long.toString(whiteTimerCount) + " White | ");
                                     whiteTimerCount = whiteTimerCount + 1;
                                 }
@@ -210,7 +212,7 @@ public class Chess extends Application {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    turnTracker.setText("Black");
+                                    turnTracker.setText("Current Turn: Black");
                                     blackTimer.setText(Long.toString(blackTimerCount) + " Black | ");
                                     blackTimerCount = blackTimerCount + 1;
                                 }
