@@ -179,34 +179,40 @@ public class Chess extends Application {
     }
 
     class TimerThread extends Thread {
-        public TimerThread(){
+        private int whiteTimerCount;
+        private int blackTimerCount;
 
+        public TimerThread(){
+            whiteTimerCount = 0;
+            blackTimerCount = 0;
         }
 
         @Override
         public void run(){
             try {
-                int whiteTimerCount = 0;
-                int blackTimerCount = 0;
+
                 while (true) {
                     if (gameStarted) {
-                        long currentTime = System.currentTimeMillis();
                         while (turn) {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
                                     turnTracker.setText("White");
-                                    whiteTimer.setText(Long.toString(whiteTimerCount + (System.currentTimeMillis() - currentTime) / 1000));
+                                    whiteTimer.setText(Long.toString(whiteTimerCount) + " White | ");
+                                    whiteTimerCount = whiteTimerCount + 1;
                                 }
                             });
                             sleep(1000);
                         }
+                        //update whiteTimerCount and blackTimerCount
+
                         while (!turn) {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
                                     turnTracker.setText("Black");
-                                    blackTimer.setText(Long.toString(blackTimerCount + (System.currentTimeMillis() - currentTime) / 1000));
+                                    blackTimer.setText(Long.toString(blackTimerCount) + " Black | ");
+                                    blackTimerCount = blackTimerCount + 1;
                                 }
                             });
                             sleep(1000);
