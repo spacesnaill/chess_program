@@ -6,6 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -29,6 +30,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Timer;
 
 //TODO create a timer
 public class Chess extends Application {
@@ -36,7 +38,7 @@ public class Chess extends Application {
     Scene scene;
     Scene sceneGame;
 
-    public static boolean turn = true;                 //whos turn it is true =white
+    public static volatile boolean turn = true;                 //whos turn it is true =white
     private volatile boolean side = true; //determines what the user can control: true is white, false is black
     private volatile String selectedUser = "";
 
@@ -56,7 +58,10 @@ public class Chess extends Application {
     private Button sendInvite;
     private Stage chessStage;
     private Client client;
-    private Label timer = new Label("Hello World");
+    private Label whiteTimer = new Label("0");
+    private Label blackTimer = new Label("0");
+    private Label turnTracker = new Label("White");
+    private volatile boolean gameStarted = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -100,6 +105,7 @@ public class Chess extends Application {
             @Override
             public void run() {
                 client.sendMessageToServer("--yes " + invites.getText().split(" ")[2]);
+                gameStarted = true;
                 primaryStage.setScene(sceneGame);
             }
         }));
@@ -160,9 +166,60 @@ public class Chess extends Application {
         StackPane layoutOther = new StackPane();
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        //timer window
+        HBox timerLayout = new HBox();
         Stage secondStage = new Stage();
-        secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
+        secondStage.setTitle("Timer");
+        secondStage.setScene(new Scene(timerLayout));
+        timerLayout.getChildren().addAll(whiteTimer, blackTimer, turnTracker);
+        TimerThread chessTimer = new TimerThread();
+        chessTimer.start();
         secondStage.show();
+    }
+
+    class TimerThread extends Thread {
+        public TimerThread(){
+
+        }
+
+        @Override
+        public void run(){
+            try {
+                int whiteTimerCount = 0;
+                int blackTimerCount = 0;
+                while (true) {
+                    if (gameStarted) {
+                        long currentTime = System.currentTimeMillis();
+                        while (turn) {
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    turnTracker.setText("White");
+                                    whiteTimer.setText(Long.toString(whiteTimerCount + (System.currentTimeMillis() - currentTime) / 1000));
+                                }
+                            });
+                            sleep(1000);
+                        }
+                        while (!turn) {
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    turnTracker.setText("Black");
+                                    blackTimer.setText(Long.toString(blackTimerCount + (System.currentTimeMillis() - currentTime) / 1000));
+                                }
+                            });
+                            sleep(1000);
+                        }
+                    }
+                }
+
+            }
+            catch(InterruptedException e){
+                e.printStackTrace();
+            }
+
+        }
     }
 
     class Client extends Thread{
@@ -289,6 +346,7 @@ public class Chess extends Application {
                         turn = !turn;
                     }
                     else if(receiving[0].equals("start")){
+                        gameStarted = true;
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
