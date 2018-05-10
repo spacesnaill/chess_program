@@ -25,8 +25,8 @@
       <file leaf-file-name="Chess.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/frostburg/pjgeiger0/Chess.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="394" column="0" lean-forward="false" selection-start-line="394" selection-start-column="0" selection-end-line="394" selection-end-column="0" />
+            <state relative-caret-position="259">
+              <caret line="117" column="95" lean-forward="true" selection-start-line="117" selection-start-column="95" selection-end-line="117" selection-end-column="95" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2890#2898#0" expanded="true" />
@@ -483,8 +483,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/frostburg/pjgeiger0/Chess.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="394" column="0" lean-forward="false" selection-start-line="394" selection-start-column="0" selection-end-line="394" selection-end-column="0" />
+        <state relative-caret-position="259">
+          <caret line="117" column="95" lean-forward="true" selection-start-line="117" selection-start-column="95" selection-end-line="117" selection-end-column="95" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2890#2898#0" expanded="true" />

@@ -172,8 +172,8 @@ public class Chess extends Application {
         Stage secondStage = new Stage();
         secondStage.setTitle("Timer");
         secondStage.setScene(new Scene(timerLayout));
-        secondStage.setWidth(200);
-        secondStage.setHeight(200);
+        secondStage.setWidth(300);
+        secondStage.setHeight(300);
         timerLayout.getChildren().addAll(whiteTimer, blackTimer, turnTracker);
         TimerThread chessTimer = new TimerThread();
         chessTimer.start();
