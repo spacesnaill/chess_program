@@ -58,9 +58,9 @@ public class Chess extends Application {
     private Button sendInvite;
     private Stage chessStage;
     private Client client;
-    private Label whiteTimer = new Label("");
-    private Label blackTimer = new Label("");
-    private Label turnTracker = new Label("Start a Match!");
+    private Label whiteTimer = new Label("0 White | ");
+    private Label blackTimer = new Label("0 Black | ");
+    private Label turnTracker = new Label("You haven't started a match yet!");
     private volatile boolean gameStarted = false;
 
     public static void main(String[] args) {
@@ -172,8 +172,8 @@ public class Chess extends Application {
         Stage secondStage = new Stage();
         secondStage.setTitle("Timer");
         secondStage.setScene(new Scene(timerLayout));
-        secondStage.setWidth(300);
-        secondStage.setHeight(300);
+        secondStage.setWidth(350);
+        secondStage.setHeight(175);
         timerLayout.getChildren().addAll(whiteTimer, blackTimer, turnTracker);
         TimerThread chessTimer = new TimerThread();
         chessTimer.start();
